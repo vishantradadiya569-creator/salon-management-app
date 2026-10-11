@@ -12,12 +12,13 @@ def get_connection():
     return mysql.connector.connect(
         host="gateway01.ap-northeast-1.prod.aws.tidbcloud.com",
         port=4000,
-        user="3FJFTp8drNUbUPy.root",
-        password="Vishant1911",  # <-- Replace with your MySQL root password
-        database="salon_db",
-        connection_timeout=5
+        user="3FJFTp8drNUbUPy.root",      # Replace with your actual user (e.g. 2N7xxxxx.root)
+        password="lQEcpuMJHdXAzXI5",  # Replace with your TiDB password
+        database="test",
+        ssl_verify_cert=True,
+        ssl_verify_identity=True,
+        connection_timeout=15
     )
-
 st.title("✂️ Salon & Barber Management ERP")
 
 # Sidebar Navigation
