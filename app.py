@@ -8,17 +8,31 @@ from datetime import date
 st.set_page_config(page_title="Salon Executive Management", layout="wide", page_icon="✂️")
 
 # Database Connection Helper (with connection timeout)
+import ssl
+
 def get_connection():
-    return mysql.connector.connect(
-        host="gateway01.ap-northeast-1.prod.aws.tidbcloud.com",
-        port=4000,
-        user="3FJFTp8drNUbUPy.root",      # Replace with your actual user (e.g. 2N7xxxxx.root)
-        password="lQEcpuMJHdXAzXI5",  # Replace with your TiDB password
-        database="test",
-        ssl_verify_cert=True,
-        ssl_verify_identity=True,
-        connection_timeout=15
-    )
+    # Standard CA bundle location on Debian/Ubuntu (used by Streamlit Cloud)
+    ca_path = "/etc/ssl/certs/ca-certificates.crt"
+    
+    cnx_kwargs = {
+        "host": "gateway01.ap-northeast-1.prod.aws.tidbcloud.com",
+        "port": 4000,
+        "user": "3FJFTp8drNUbUPy.root",      # e.g., xxxxxx.root
+        "password": "lQEcpuMJHdXAzXI5",  # your TiDB password
+        "database": "test",
+        "use_pure": True,
+        "connection_timeout": 15
+    }
+    
+    import os
+    if os.path.exists(ca_path):
+        cnx_kwargs["ssl_ca"] = ca_path
+        cnx_kwargs["ssl_verify_cert"] = True
+    else:
+        cnx_kwargs["ssl_disabled"] = False
+        
+    return mysql.connector.connect(**cnx_kwargs)
+    
 st.title("✂️ Salon & Barber Management ERP")
 
 # Sidebar Navigation
